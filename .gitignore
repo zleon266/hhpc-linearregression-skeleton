@@ -1,3 +1,4 @@
 linreg
 bin/
 *.o
+logs/
