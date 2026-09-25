@@ -13,6 +13,16 @@
  * ---------------------------------------------------------------------- */
 void compute_XtX(const double X[], double XtX[], int N, int p) {
 
-  /* TODO: implement XtX = X^T * X here. */
+  for (int a = 0; a < p; a++) {
+    for (int b = 0; b < p; b++) {
+      double sum = 0.0;
+
+      for (int i = 0; i < N; i++) {
+        sum += X[i * p + a] * X[i * p + b];
+      }
+
+      XtX[a * p + b] = sum;
+    }
+  }
 
 }

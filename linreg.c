@@ -86,14 +86,21 @@ static void check_solution(const double *beta, const double *beta_true, int p) {
  * ---------------------------------------------------------------------- */
 int main(int argc, char **argv) {
   if (argc < 3) {
-    fprintf(stderr, "Usage: %s N p [seed] [noise_std]\n", argv[0]);
-    return 1;
+     fprintf(stderr, "Usage: %s N p [seed] [noise_std] [solver]\n", argv[0]);
+      return 1;
   }
-
   int N = atoi(argv[1]);
   int p = atoi(argv[2]);
   unsigned int seed = (argc > 3) ? (unsigned int)atoi(argv[3]) : 42u;
   double noise_std = (argc > 4) ? atof(argv[4]) : 0.5;
+
+const char *solver = (argc > 5) ? argv[5] : "gaussian";
+
+  if (strcmp(solver, "gaussian") != 0 &&
+      strcmp(solver, "gauss-jordan") != 0) {
+    fprintf(stderr, "Solver must be gaussian or gauss-jordan.\n");
+    return 1;
+  }
 
   printf("Config: N=%d p=%d seed=%u noise_std=%.3f\n", N, p, seed, noise_std);
 
@@ -123,13 +130,22 @@ int main(int argc, char **argv) {
   compute_Xty(X, y, Xty, N, p);
   timestamp(&t2);
 
-  gaussian_elimination_solve(XtX, Xty, beta, p);
-  timestamp(&t3);
+  if (strcmp(solver, "gaussian") == 0) {
+    gaussian_elimination_solve(XtX, Xty, beta, p);
+  } else {
+    gauss_jordan_solve(XtX, Xty, beta, p);
+  }
 
-  check_solution(beta, beta_true, p);
 
-  // Print times:
-  // printf("Time taken by ...: %.2f s\n", diff_seconds(&t1, &t0));
+timestamp(&t3);
+
+printf("Time XtX: %.6f s\n", diff_seconds(&t0, &t1));
+printf("Time Xty: %.6f s\n", diff_seconds(&t1, &t2));
+printf("Time solve: %.6f s\n", diff_seconds(&t2, &t3));
+printf("Time total: %.6f s\n", diff_seconds(&t0, &t3));
+
+check_solution(beta, beta_true, p);
+
 
   free(X);
   free(beta_true);
