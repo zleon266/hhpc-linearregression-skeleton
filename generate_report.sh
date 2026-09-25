@@ -68,6 +68,15 @@ coefficient differences. This is expected because there are no redundant
 observations to average out noise, and solving normal equations can amplify
 conditioning effects. It is not used as the correctness criterion.
 
+Acceptance criterion for zero-noise verification:
+
+```text
+max |beta - beta_true| <= 1e-5
+```
+
+All formal zero-noise runs passed this criterion. The largest observed printed
+error was `1e-6`.
+
 ## Timing results
 
 Each total is the mean of three runs; the value after `±` is the sample
@@ -132,8 +141,9 @@ To repeat the measurements:
 ```bash
 sbatch benchmark.slurm gaussian 3
 sbatch benchmark.slurm gauss-jordan 3
-bash summarize_results.sh results/benchmark-gaussian-JOBID.csv \
-    results/benchmark-gauss-jordan-JOBID.csv
+bash summarize_results.sh results/benchmark-gaussian-GAUSSIAN_JOBID.csv \
+     results/benchmark-gauss-jordan-GAUSS_JORDAN_JOBID.csv
+
 ```
 EOF
 } > "$report"

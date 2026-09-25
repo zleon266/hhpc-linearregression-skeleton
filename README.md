@@ -43,3 +43,44 @@ You must run and report results for the following three `(N, p)` configurations,
 2. A short benchmarking report in FT3, including: verification that your `β` matches `β_true` within tolerance, and execution time for each configuration above (averaged over multiple runs, as usual).
   - The benchmarking will show results with binaries built with `gcc-10.1.0`, `icc 2021.3.0` and `icx 2021.3.0` using these optimization levels: `-O0`, `-O2`, `-O3` and `-Ofast` (include -march=native in every level greater than `O0`).
   - Consider the total execution time for the linear regression computation, after allocating and generating the data structures.
+
+## Reproducing the submitted experiments
+
+The submitted implementation is intended to run on an FT3 compute node.
+
+### Fresh-clone setup
+
+Slurm creates its output file before the batch script starts. Create the output
+directories once after cloning:
+
+```bash
+mkdir -p logs bin results
+make --version
+```
+
+This repository requires GNU Make 3.82 or newer because the `Makefile` uses
+`.RECIPEPREFIX`. FT3 provides a compatible GNU Make.
+
+### Formal benchmark runs
+
+The scripts rebuild every binary on the allocated compute node. This is
+important because the optimized builds use `-march=native`.
+
+```bash
+sbatch benchmark.slurm gaussian 3
+sbatch benchmark.slurm gauss-jordan 3
+```
+
+After both jobs complete, combine the raw measurements and regenerate the
+report:
+
+```bash
+bash summarize_results.sh \
+  results/benchmark-gaussian-GAUSSIAN_JOBID.csv \
+  results/benchmark-gauss-jordan-GAUSS_JORDAN_JOBID.csv
+
+bash generate_report.sh
+```
+
+`logs/` and `bin/` are intentionally ignored. The final raw CSV files,
+environment records, summary CSV, and `REPORT.md` are version controlled.
