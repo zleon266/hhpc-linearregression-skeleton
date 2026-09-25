@@ -1,0 +1,8 @@
+Host: c205-10
+Start: Fri Sep 25 20:17:22 CEST 2026
+Solver: gaussian
+Repeats: 3
+
+gcc (Gentoo 10.1.0-r2 p3) 10.1.0
+icc (ICC) 2021.3.0 20210609
+Intel(R) oneAPI DPC++/C++ Compiler 2021.3.0 (2021.3.0.20210619)
