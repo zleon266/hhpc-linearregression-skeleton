@@ -4,7 +4,7 @@ CC ?= gcc
 OPT ?= -O0
 TARGET ?= linreg
 
-CFLAGS := -std=gnu11 -Wall -Wextra -Wpedantic $(OPT)
+CFLAGS := -std=gnu11 -Wall -Wextra $(OPT)
 LDLIBS := -lm
 
 SRC := linreg.c gemm.c gemv.c gaussian.c rng.c
